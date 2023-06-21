@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <!-- CSS only -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+        <!-- JS, Popper.js, and jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <title>{% block title %}{% endblock %}</title>
+
+        <link rel="apple-touch-icon" sizes="180x180" href="/static/favicon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">
+        <link rel="manifest" href="/static/favicon/site.webmanifest">
+
+        <script src="https://kit.fontawesome.com/13beda203e.js" crossorigin="anonymous"></script>
+
+        <style>
+            #main {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                height: 60px; /* Set the fixed height of the footer here */
+                line-height: 60px; /* Vertically center the text there */
+                background-color: #f5f5f5;
+            }
+        </style>
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Gradebook</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/schools">All Schools</a>
+                </li>
+                {% if not session["user_id"] %}
+                  <li class="nav-item active">
+                    <a class="nav-link" href="/create-school">Create School (No School District Associated)</a>
+                  </li>
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/create-district">Create School District</a>
+                  </li>
+                  <li class="nav-item active">
+                      <a class="nav-link" href="/login">Login</a>
+                  </li>
+                {% endif %}
+                {% if session["status"] == "district-admin" %}
+                  <li class="nav-item active">
+                    <a class="nav-link" href="/district-admin/{{ session['district_code']}}">District Admin Dashboard</a>
+                  </li>
+                {% elif session["status"] == "teacher" %}
+                  <li class="nav-item active">
+                    <a class="nav-link" href="/teacher">Teacher Dashboard</a>
+                  </li>
+                {% endif %}
+                <!--
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </div>
+                </li>
+                -->
+              </ul>
+              <!--
+              <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+              -->
+              <a href="https://github.com/boyuan12/A-Simple-Gradebook"><i class="fab fa-github"></i></a>
+              <img src="/static/beta.png" width="50px" height="50px"> <small>(Made from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>)</small>
+            </div>
+        </nav>
+        <div class="alert alert-warning">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          IMPORTANT!: We are currently in beta mode, so anything may change at any moment. Note that this is an INCOMPLETE website! Thanks! <small>The beta image (<img src="/static/beta.png" width="25px" height="25px">) is made by <a href="https://www.flaticon.com/authors/flat-icons" title="Flat Icons">Flat Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a></small>
+        </div>
+        {% for message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{ message[0] }}">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message[1] }}
+            </div>
+        {% endfor %}
+        <div id="main">
+            {% block main %}{% endblock %}
+        </div>
+    </body>
+</html>
